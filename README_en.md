@@ -97,3 +97,45 @@ tap_action_circle_2:
 entity_circle_3: sensor.current_power
 min_circle_3: 0
 max_circle_3: 4000
+
+### 2. Smart Heating (With Status Badge) 🔥
+Display the room temperature, but use a Badge to indicate if the boiler is actually running.
+
+```yaml
+type: custom:domhouse-weather-card
+name: "Bedroom Climate"
+entity_weather: weather.forecast_home
+
+# Main Circle: Room Temperature
+entity_circle_1: sensor.bedroom_temperature
+min_circle_1: 10
+max_circle_1: 30
+
+# Badge: Shows a flame icon if the heater switch is ON
+badge_entity_circle_1: switch.heater_plug
+badge_icon_circle_1: mdi:fire
+badge_color_on_circle_1: "#ff5722"  # Orange when Heating
+badge_color_off_circle_1: "#9e9e9e" # Grey when Off
+```
+### 3. Advanced Action (Browser Mod Popup)
+Use a circle as a button to open a security keypad.
+
+```yaml
+type: custom:domhouse-weather-card
+name: "Security System"
+
+entity_circle_1: alarm_control_panel.house
+tap_action_circle_1:
+  action: fire-dom-event
+  browser_mod:
+    service: browser_mod.popup
+    data:
+      title: Alarm Keypad
+      content:
+        type: entities
+        entities:
+          - entity: alarm_control_panel.house
+```
+
+## ❤️ Credits
+Developed by Salvatore Lentini - DomHouse.it. Animated weather icons based on [Bram Kragten](https://github.com/bramkragten/weather-card) work.
