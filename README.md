@@ -32,7 +32,7 @@ Combina 3 indicatori circolari (Gauges) per i sensori e una lista previsionale m
 1.  Apri **HACS** in Home Assistant.
 2.  Vai nella sezione **Frontend**.
 3.  Clicca sui 3 puntini in alto a destra > **Repository Personalizzati**.
-4.  Incolla l'URL di questo repository GitHub.
+4.  Incolla l'URL di questo repository GitHub. https://github.com/SalvatoreITA/domhouse-weather-card
 5.  Seleziona la categoria **Lovelace**.
 6.  Clicca **Aggiungi** e poi **Scarica**.
 7.  Ricarica la pagina del browser.
@@ -110,3 +110,45 @@ entity_weather: weather.forecast_home
 entity_temp: sensor.temperatura_esterna
 entity_hum: sensor.umidita_esterna
 entity_press: sensor.pressione_assoluta
+```
+
+### Esempio 2: Monitor Server (Senza Meteo, Senza Titolo)
+Una card compatta per monitorare il tuo sistema Home Assistant o un PC. Rimuovendo entity_weather e name, la card diventa minimalista.
+
+```yaml
+type: custom:domhouse-weather-card
+# name:  <-- Rimosso per nascondere il titolo
+# entity_weather: <-- Rimosso per nascondere le previsioni
+
+# Cerchio 1: Temperatura CPU (Rileva °C -> Arancione)
+entity_temp: sensor.processor_temperature
+
+# Cerchio 2: Uso RAM (Rileva % -> Blu)
+entity_hum: sensor.memory_use_percent
+hum_icon: mdi:memory  # Cambio icona manuale
+
+# Cerchio 3: Potenza assorbita (Rileva W -> Giallo)
+entity_press: sensor.server_power
+
+### Esempio 3: Override Manuale (Colori Personalizzati)
+Vuoi un cerchio della temperatura Verde invece che Arancione? Ecco come fare.
+
+type: custom:domhouse-weather-card
+name: "Stanza da Letto"
+entity_weather: weather.forecast_home
+
+entity_temp: sensor.temperatura_camera
+temp_color: "#4caf50"      # Forza colore VERDE (HEX)
+temp_icon: "mdi:bed"       # Forza icona LETTO
+temp_min: 15               # Cambia scala minima
+temp_max: 30               # Cambia scala massima
+
+entity_hum: sensor.umidita_camera
+entity_press: sensor.quality_air_pm25
+```
+
+## ❤️ Credits
+Sviluppato da DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di Bram Kragten.
+
+
+
