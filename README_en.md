@@ -97,92 +97,91 @@ If you do not specify colors or icons, the card chooses them automatically based
 
 ## 💡 Usage Examples
 
-### Esempio 1: Configurazione Completa (Meteo)
-La classica visualizzazione con titolo, meteo e 3 sensori climatici.
+### Example 1: Complete Configuration (Weather)
+The classic view with title, weather, and 3 climate sensors.
 
 ```yaml
 type: custom:domhouse-weather-card
-name: "Meteo Casa"
+name: "Meteo Home"
 entity_weather: weather.forecast_home
 entity_temp: sensor.temperatura_esterna
 entity_hum: sensor.umidita_esterna
 entity_press: sensor.pressione_assoluta
 ```
 
-### Esempio 2: Monitor Server (Senza Meteo, Senza Titolo)
-Una card compatta per monitorare il tuo sistema Home Assistant o un PC. Rimuovendo entity_weather e name, la card diventa minimalista.
+### Example 2: Server Monitor (No Weather, No Title)
+A compact card to monitor your Home Assistant system or a PC. By removing entity_weather and name, the card becomes minimalist.
 
 ```yaml
 type: custom:domhouse-weather-card
-# name:  <-- Rimosso per nascondere il titolo
-# entity_weather: <-- Rimosso per nascondere le previsioni
+# name:  <-- Removed to hide title
+# entity_weather: <-- Removed to hide forecasts
 
-# Cerchio 1: Temperatura CPU (Rileva °C -> Arancione)
+# Circle 1: CPU Temperature (Detects °C -> Orange)
 entity_temp: sensor.processor_temperature
 
-# Cerchio 2: Uso RAM (Rileva % -> Blu)
+# Circle 2: RAM Usage (Detects % -> Blue)
 entity_hum: sensor.memory_use_percent
 hum_icon: mdi:memory  # Cambio icona manuale
 
-# Cerchio 3: Potenza assorbita (Rileva W -> Giallo)
+# Circle 3: Power Draw (Detects W -> Yellow)
 entity_press: sensor.server_power
 
-### Esempio 3: Override Manuale (Colori Personalizzati)
-Vuoi un cerchio della temperatura Verde invece che Arancione? Ecco come fare.
+### Example 3: Manual Override (Custom Colors)
+Do you want a Green temperature circle instead of Orange? Here is how to do it.
 
 type: custom:domhouse-weather-card
-name: "Stanza da Letto"
+name: "Bedroom"
 entity_weather: weather.forecast_home
 
-entity_temp: sensor.temperatura_camera
-temp_color: "#4caf50"      # Forza colore VERDE (HEX)
-temp_icon: "mdi:bed"       # Forza icona LETTO
-temp_min: 15               # Cambia scala minima
-temp_max: 30               # Cambia scala massima
+entity_temp: sensor.bedroom_temperature
+temp_color: "#4caf50"      # Force GREEN color (HEX)
+temp_icon: "mdi:bed"       # Force BED icon
+temp_min: 15               # Change min scale
+temp_max: 30               # Change max scale
 
-entity_hum: sensor.umidita_camera
+entity_hum: sensor.bedroom_humidity
 entity_press: sensor.quality_air_pm25
 ```
-### Esempio 4: Browser Mod & Popup
-Cliccando sul primo cerchio si apre un popup personalizzato
+### Example 3: Browser Mod & Popup
+Clicking on the first circle opens a custom popup.
 
-Azione: Apre Popup Browser Mod
-```yaml
+Action: Open Browser Mod Popup
 tap_action_1:
   action: fire-dom-event
   browser_mod:
     service: browser_mod.popup
     data:
-      title: Titolo Popup
+      title: Popup Title
       style: |
         --popup-background-color: var(--secondary-background-color);
         --dialog-backdrop-filter: blur(2em) brightness(0.75);
       content:
         type: entities
         entities:
-          - entity: switch.xxx
+          - entity: switch.security_system
 ```
 
-### Esempio 4: Navigazione e Toggle
-Usare i cerchi come pulsanti rapidi.
+### Example 4: Navigation and Toggle
+Use the circles as quick buttons.
 ```yaml
 type: custom:domhouse-weather-card
-name: Comandi
+name: Commands
 
-# Cerchio 1: Naviga a un'altra pagina
-entity_temp: sensor.temp_media
+# Circle 1: Navigate to another page
+entity_temp: sensor.avg_temp
 tap_action_1:
   action: navigate
-  navigation_path: /lovelace/stanze
+  navigation_path: /lovelace/rooms
 
-# Cerchio 2: Accendi/Spegni Luce
-entity_hum: light.luce_sala
+# Circle 2: Turn Light On/Off
+entity_hum: light.living_room_light
 hum_icon: mdi:lightbulb
 tap_action_2:
   action: toggle
 ```
 
 ## ❤️ Credits
-Sviluppato da Salvatore Lentini - DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di [Bram Kragten](https://github.com/bramkragten/weather-card)
+Developed by Salvatore Lentini - DomHouse.it. Based on the original concept of Weather Card but completely rewritten with native LitElement technology. Animated weather icons are by [Bram Kragten](https://github.com/bramkragten/weather-card).
 
 
