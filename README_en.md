@@ -9,8 +9,6 @@
 
 An **"All-in-One"** card for Home Assistant Lovelace, designed to be elegant, smart, and versatile.
 
-Originally born as a weather card, **v7.0** transforms it into a generic dashboard tool. You can now monitor **any entity** (Sensors, People, Switches, Lights) in the 3 circular gauges, complete with **Status Badges** and intelligent state translation.
-
 ![Card Preview](preview.png)
 
 ---
