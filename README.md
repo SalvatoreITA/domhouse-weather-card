@@ -143,7 +143,7 @@ entity_press: sensor.quality_air_pm25
 ### Esempio 4: Browser Mod & Popup
 Cliccando sul primo cerchio si apre un popup personalizzato
 
-### Azione: Apre Popup Browser Mod
+#### Azione: Apre Popup Browser Mod
 ```yaml
 tap_action_1:
   action: fire-dom-event
