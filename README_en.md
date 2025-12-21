@@ -97,13 +97,92 @@ If you do not specify colors or icons, the card chooses them automatically based
 
 ## 💡 Usage Examples
 
-### Example 1: Complete Configuration (Weather)
-The classic view with title, weather, and 3 climate sensors.
+### Esempio 1: Configurazione Completa (Meteo)
+La classica visualizzazione con titolo, meteo e 3 sensori climatici.
 
 ```yaml
 type: custom:domhouse-weather-card
-name: "Home Weather"
+name: "Meteo Casa"
 entity_weather: weather.forecast_home
-entity_temp: sensor.outdoor_temperature
-entity_hum: sensor.outdoor_humidity
-entity_press: sensor.absolute_pressure
+entity_temp: sensor.temperatura_esterna
+entity_hum: sensor.umidita_esterna
+entity_press: sensor.pressione_assoluta
+```
+
+### Esempio 2: Monitor Server (Senza Meteo, Senza Titolo)
+Una card compatta per monitorare il tuo sistema Home Assistant o un PC. Rimuovendo entity_weather e name, la card diventa minimalista.
+
+```yaml
+type: custom:domhouse-weather-card
+# name:  <-- Rimosso per nascondere il titolo
+# entity_weather: <-- Rimosso per nascondere le previsioni
+
+# Cerchio 1: Temperatura CPU (Rileva °C -> Arancione)
+entity_temp: sensor.processor_temperature
+
+# Cerchio 2: Uso RAM (Rileva % -> Blu)
+entity_hum: sensor.memory_use_percent
+hum_icon: mdi:memory  # Cambio icona manuale
+
+# Cerchio 3: Potenza assorbita (Rileva W -> Giallo)
+entity_press: sensor.server_power
+
+### Esempio 3: Override Manuale (Colori Personalizzati)
+Vuoi un cerchio della temperatura Verde invece che Arancione? Ecco come fare.
+
+type: custom:domhouse-weather-card
+name: "Stanza da Letto"
+entity_weather: weather.forecast_home
+
+entity_temp: sensor.temperatura_camera
+temp_color: "#4caf50"      # Forza colore VERDE (HEX)
+temp_icon: "mdi:bed"       # Forza icona LETTO
+temp_min: 15               # Cambia scala minima
+temp_max: 30               # Cambia scala massima
+
+entity_hum: sensor.umidita_camera
+entity_press: sensor.quality_air_pm25
+```
+### Esempio 4: Browser Mod & Popup
+Cliccando sul primo cerchio si apre un popup personalizzato
+
+Azione: Apre Popup Browser Mod
+```yaml
+tap_action_1:
+  action: fire-dom-event
+  browser_mod:
+    service: browser_mod.popup
+    data:
+      title: Titolo Popup
+      style: |
+        --popup-background-color: var(--secondary-background-color);
+        --dialog-backdrop-filter: blur(2em) brightness(0.75);
+      content:
+        type: entities
+        entities:
+          - entity: switch.xxx
+```
+
+### Esempio 4: Navigazione e Toggle
+Usare i cerchi come pulsanti rapidi.
+```yaml
+type: custom:domhouse-weather-card
+name: Comandi
+
+# Cerchio 1: Naviga a un'altra pagina
+entity_temp: sensor.temp_media
+tap_action_1:
+  action: navigate
+  navigation_path: /lovelace/stanze
+
+# Cerchio 2: Accendi/Spegni Luce
+entity_hum: light.luce_sala
+hum_icon: mdi:lightbulb
+tap_action_2:
+  action: toggle
+```
+
+## ❤️ Credits
+Sviluppato da Salvatore Lentini - DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di [Bram Kragten](https://github.com/bramkragten/weather-card)
+
+
