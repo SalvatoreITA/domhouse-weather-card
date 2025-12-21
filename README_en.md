@@ -97,6 +97,7 @@ tap_action_circle_2:
 entity_circle_3: sensor.current_power
 min_circle_3: 0
 max_circle_3: 4000
+```
 
 ### 2. Smart Heating (With Status Badge) 🔥
 Display the room temperature, but use a Badge to indicate if the boiler is actually running.
