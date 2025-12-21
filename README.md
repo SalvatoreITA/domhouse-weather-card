@@ -2,7 +2,7 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![version](https://img.shields.io/badge/version-v3.4-blue.svg)]()
-[![maintainer](https://img.shields.io/badge/maintainer-DomHouse-green.svg)](https://www.domhouse.it)
+[![maintainer](https://img.shields.io/badge/maintainer-Salvatore_Lentini_--_DomHouse.it-green.svg)](https://www.domhouse.it)
 
 Una card meteo **"All-in-One"** per Home Assistant Lovelace, progettata per essere elegante, intelligente e facilissima da configurare.
 
@@ -148,7 +148,7 @@ entity_press: sensor.quality_air_pm25
 ```
 
 ## ❤️ Credits
-Sviluppato da DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di Bram Kragten.
+Sviluppato da Salvatore Lentini - DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di [Bram Kragten](https://github.com/bramkragten/weather-card)
 
 
 
