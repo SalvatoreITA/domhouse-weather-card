@@ -97,3 +97,44 @@ tap_action_circle_2:
 entity_circle_3: sensor.current_power
 min_circle_3: 0
 max_circle_3: 4000
+```
+### 2. Riscaldamento Smart (Con Badge di Stato) 🔥
+Visualizza la temperatura della stanza, ma usa un Badge per indicare se la caldaia è effettivamente in funzione.
+
+```yaml
+type: custom:domhouse-weather-card
+name: "Clima Camera"
+entity_weather: weather.forecast_home
+
+# Cerchio Principale: Temperatura Stanza
+entity_circle_1: sensor.bedroom_temperature
+min_circle_1: 10
+max_circle_1: 30
+
+# Badge: Mostra un'icona fiamma se l'interruttore del riscaldamento è ON
+badge_entity_circle_1: switch.heater_plug
+badge_icon_circle_1: mdi:fire
+badge_color_on_circle_1: "#ff5722"  # Arancione quando riscalda
+badge_color_off_circle_1: "#9e9e9e" # Grigio quando spento
+```
+### 3. Azione Avanzata (Popup Browser Mod)
+Usa un cerchio come pulsante per aprire un tastierino di sicurezza.
+
+```yaml
+type: custom:domhouse-weather-card
+name: "Sistema di Sicurezza"
+
+entity_circle_1: alarm_control_panel.house
+tap_action_circle_1:
+  action: fire-dom-event
+  browser_mod:
+    service: browser_mod.popup
+    data:
+      title: Tastierino Allarme
+      content:
+        type: entities
+        entities:
+          - entity: alarm_control_panel.house
+```
+### ❤️ Crediti
+Sviluppato da Salvatore Lentini - DomHouse.it. Icone meteo animate basate sul lavoro di [Bram Kragten](https://github.com/bramkragten/weather-card)
