@@ -143,6 +143,42 @@ entity_press: sensor.quality_air_pm25
 ### Esempio 4: Browser Mod & Popup
 Cliccando sul primo cerchio si apre un popup personalizzato
 
+# Azione: Apre Popup Browser Mod
+```yaml
+tap_action_1:
+  action: fire-dom-event
+  browser_mod:
+    service: browser_mod.popup
+    data:
+      title: Titolo Popup
+      style: |
+        --popup-background-color: var(--secondary-background-color);
+        --dialog-backdrop-filter: blur(2em) brightness(0.75);
+      content:
+        type: entities
+        entities:
+          - entity: switch.xxx
+```
+
+### Esempio 4: Navigazione e Toggle
+Usare i cerchi come pulsanti rapidi.
+```yaml
+type: custom:domhouse-weather-card
+name: Comandi
+
+# Cerchio 1: Naviga a un'altra pagina
+entity_temp: sensor.temp_media
+tap_action_1:
+  action: navigate
+  navigation_path: /lovelace/stanze
+
+# Cerchio 2: Accendi/Spegni Luce
+entity_hum: light.luce_sala
+hum_icon: mdi:lightbulb
+tap_action_2:
+  action: toggle
+```
+
 ## ❤️ Credits
 Sviluppato da Salvatore Lentini - DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di [Bram Kragten](https://github.com/bramkragten/weather-card)
 
