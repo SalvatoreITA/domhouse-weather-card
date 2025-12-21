@@ -8,7 +8,7 @@ Una card meteo **"All-in-One"** per Home Assistant Lovelace, progettata per esse
 
 Combina 3 indicatori circolari (Gauges) per i sensori e una lista previsionale meteo a 5 giorni, tutto in un unico componente leggero e senza dipendenze esterne.
 
-![Anteprima Card](card.png) 
+![Anteprima Card](card.PNG) 
 *(Sostituisci questo nome file con il nome reale del tuo screenshot se diverso)*
 
 ---
