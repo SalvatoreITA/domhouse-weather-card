@@ -1,23 +1,23 @@
 # 🌦️ DomHouse Weather Card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-[![version](https://img.shields.io/badge/version-v3.4-blue.svg)]()
+[![version](https://img.shields.io/badge/version-v4.0-blue.svg)]()
 [![maintainer](https://img.shields.io/badge/maintainer-Salvatore_Lentini_--_DomHouse.it-green.svg)](https://www.domhouse.it)
 
 Una card meteo **"All-in-One"** per Home Assistant Lovelace, progettata per essere elegante, intelligente e facilissima da configurare.
 
 Combina 3 indicatori circolari (Gauges) per i sensori e una lista previsionale meteo a 5 giorni, tutto in un unico componente leggero e senza dipendenze esterne.
 
-![Anteprima Card](card.PNG) 
-
+![Anteprima Card](card.PNG)
 
 ---
 
 ## ✨ Caratteristiche Principali
 
 * **Zero Dipendenze:** Non richiede l'installazione di altre card (niente `stack-in-card`, `apexcharts`, `mushroom`). È un unico file `.js` autonomo.
-* **Editor Visivo Completo:** Configurabile al 100% dall'interfaccia grafica di Home Assistant (UI), senza toccare una riga di codice.
+* **Editor Visivo Completo:** Configurabile al 100% dall'interfaccia grafica di Home Assistant (UI).
 * **Smart Auto-Detect 🧠:** La card "legge" l'unità di misura dei tuoi sensori e configura automaticamente **Icona**, **Colore** e **Scala Min/Max**.
+* **Interattività Avanzata (Tap Action) 👆:** Ogni elemento (cerchi e meteo) è cliccabile. Supporta azioni native (`Maps`, `call-service`, `toggle`) e **Browser Mod** (`fire-dom-event`) per popup personalizzati.
 * **Modulare:**
     * Se non selezioni un'entità meteo, la sezione previsioni sparisce automaticamente.
     * Se non scrivi un titolo, l'intestazione si nasconde per risparmiare spazio.
@@ -32,7 +32,7 @@ Combina 3 indicatori circolari (Gauges) per i sensori e una lista previsionale m
 1.  Apri **HACS** in Home Assistant.
 2.  Vai nella sezione **Frontend**.
 3.  Clicca sui 3 puntini in alto a destra > **Repository Personalizzati**.
-4.  Incolla l'URL di questo repository GitHub. https://github.com/SalvatoreITA/domhouse-weather-card
+4.  Incolla l'URL di questo repository GitHub: `https://github.com/SalvatoreITA/domhouse-weather-card`
 5.  Seleziona la categoria **Lovelace**.
 6.  Clicca **Aggiungi** e poi **Scarica**.
 7.  Ricarica la pagina del browser.
@@ -56,30 +56,24 @@ Puoi aggiungere la card alla tua dashboard in due modi:
 1.  Nella tua dashboard, clicca **Modifica plancia**.
 2.  Clicca **Aggiungi Scheda**.
 3.  Cerca **"Meteo DomHouse"**.
-4.  Usa i menu a tendina per selezionare i tuoi sensori. L'anteprima si aggiornerà in tempo reale.
+4.  Usa i menu a tendina per selezionare i tuoi sensori.
 
 ### 2. Configurazione YAML (Manuale)
-Ecco la lista completa delle variabili disponibili.
+Ecco la lista completa delle variabili disponibili, incluse le nuove azioni al tocco.
 
 | Opzione | Tipo | Descrizione | Default |
 | :--- | :--- | :--- | :--- |
-| `type` | string | **Obbligatorio.** Deve essere `custom:domhouse-weather-card`. | - |
+| `type` | string | **Obbligatorio.** `custom:domhouse-weather-card` | - |
 | `name` | string | Titolo della card. Se omesso, l'intestazione viene nascosta. | - |
 | `entity_weather` | string | L'entità meteo (es. `weather.casa`). Se omesso, le previsioni non appaiono. | - |
-| `forecast_type` | string | Tipo di previsioni: `daily` (giornaliero) o `hourly` (orario). | `daily` |
-| **CERCHIO 1** | | | |
-| `entity_temp` | string | Entità per il primo cerchio (sinistra). | - |
-| `temp_icon` | string | Sovrascrivi l'icona (es. `mdi:fire`). | Auto |
-| `temp_color` | string | Sovrascrivi il colore HEX (es. `#ff0000`). | Auto |
-| `temp_unit` | string | Sovrascrivi l'unità di misura. | Auto |
-| `temp_min` | number | Valore minimo della scala. | Auto |
-| `temp_max` | number | Valore massimo della scala. | Auto |
-| **CERCHIO 2** | | *(Stesse opzioni del cerchio 1, prefisso `hum_`)* | |
-| `entity_hum` | string | Entità per il cerchio centrale. | - |
-| `hum_icon` | string | ... | Auto |
-| **CERCHIO 3** | | *(Stesse opzioni del cerchio 1, prefisso `press_`)* | |
-| `entity_press` | string | Entità per il terzo cerchio (destra). | - |
-| `press_icon` | string | ... | Auto |
+| `tap_action_weather` | action | Azione al click sulla riga meteo. | `more-info` |
+| **CERCHIO 1 (Sinistra)** | | | |
+| `entity_temp` | string | Entità per il primo cerchio. | - |
+| `temp_icon` | string | Sovrascrivi l'icona. | Auto |
+| `temp_color` | string | Sovrascrivi il colore HEX. | Auto |
+| `tap_action_1` | action | Azione al click sul Cerchio 1. | `more-info` |
+| **CERCHIO 2 (Centro)** | | *(Prefisso `hum_` e `tap_action_2`)* | |
+| **CERCHIO 3 (Destra)** | | *(Prefisso `press_` e `tap_action_3`)* | |
 
 ---
 
@@ -146,6 +140,8 @@ temp_max: 30               # Cambia scala massima
 entity_hum: sensor.umidita_camera
 entity_press: sensor.quality_air_pm25
 ```
+### Esempio 4: Browser Mod & Popup
+Cliccando sul primo cerchio si apre un popup personalizzato
 
 ## ❤️ Credits
 Sviluppato da Salvatore Lentini - DomHouse.it. Basato sul concetto originale di Weather Card ma completamente riscritto con tecnologia LitElement nativa. Le icone meteo animate sono di [Bram Kragten](https://github.com/bramkragten/weather-card)
