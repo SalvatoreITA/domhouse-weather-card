@@ -13,7 +13,9 @@ Designed to be elegant, versatile, and incredibly easy to configure. This card c
 
 Complete with **Status Badges** (notification dots), intelligent state translations, and advanced tap actions.
 
-![Card Preview](CARD.PNG)
+<div align="center">
+  <img src="CARD.PNG" alt="Card Preview">
+</div>
 
 ---
 
