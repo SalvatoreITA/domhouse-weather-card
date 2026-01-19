@@ -13,8 +13,9 @@ Progettata per essere elegante, versatile e incredibilmente facile da configurar
 
 Completa di **Badge di Stato** (bollini di notifica), traduzioni intelligenti degli stati e azioni al tocco avanzate.
 
-![Anteprima Card](CARD.PNG)
-
+<div align="center">
+  <img src="CARD.PNG" alt="Card Preview">
+</div>
 ---
 
 ## ✨ Funzionalità Principali
