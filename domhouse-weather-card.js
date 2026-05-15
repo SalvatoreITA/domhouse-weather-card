@@ -1,4 +1,4 @@
-console.info("%c 🌦️ DOMHOUSE-WEATHER-CARD v7.9.1 (HA 2026.5 FIX) IS LOADED ", "color: white; background: #2196f3; font-weight: bold;");
+console.info("%c 🌦️ DOMHOUSE-WEATHER-CARD v7.9.4 (UI LAYOUT FIX) IS LOADED ", "color: white; background: #2196f3; font-weight: bold;");
 
 const LitElement = customElements.get("ha-panel-lovelace")
   ? Object.getPrototypeOf(customElements.get("ha-panel-lovelace"))
@@ -178,10 +178,9 @@ class DomHouseWeatherCard extends LitElement {
                 auto.max = 50;
                 auto.icon = "mdi:home-thermometer-outline";
 
-                // Colore Dinamico Temperatura
-                if (val < 19) auto.color = "#2196f3";      // Blu (Freddo)
-                else if (val <= 26) auto.color = "#4caf50"; // Verde (Comfort)
-                else auto.color = "#e53935";               // Rosso (Caldo)
+                if (val < 19) auto.color = "#2196f3";
+                else if (val <= 26) auto.color = "#4caf50";
+                else auto.color = "#e53935";
             }
             else if (u === "%") { auto.min = 0; auto.max = 100; auto.icon = "mdi:water-percent"; auto.color = "#2196f3"; }
             else if (["hPa", "mbar", "bar"].includes(u)) { auto.min = 960; auto.max = 1060; auto.icon = "mdi:gauge"; auto.color = "#ff9800"; }
@@ -347,7 +346,6 @@ class DomHouseWeatherCard extends LitElement {
         displayUnit = "";
         const rawState = entity.state.toLowerCase();
 
-        // --- MODIFICA INTELLIGENTE ---
         const deviceClass = entity.attributes.device_class;
         const isOpening = ['window', 'door', 'garage', 'gate', 'opening'].includes(deviceClass);
 
@@ -359,7 +357,6 @@ class DomHouseWeatherCard extends LitElement {
             "unlocked": "Sbloccato", "locked": "Bloccato",
             "above_horizon": "Giorno", "below_horizon": "Notte"
         };
-        // -----------------------------
 
         if (translations[rawState]) {
             displayValue = translations[rawState];
@@ -505,7 +502,7 @@ class DomHouseWeatherCard extends LitElement {
 customElements.define("domhouse-weather-card", DomHouseWeatherCard);
 
 // =============================================================================
-//  VISUAL EDITOR CLASS (v7.9.1 - Layout Fixes for HA >= 2024.5 / 2026.5)
+//  VISUAL EDITOR CLASS (v7.9.4 - Clear Entity & Icon Button UI Fix)
 // =============================================================================
 class DomHouseWeatherCardEditor extends LitElement {
   static get properties() {
@@ -519,6 +516,55 @@ class DomHouseWeatherCardEditor extends LitElement {
     this._config = config;
   }
 
+  // --- FUNZIONE PER IL TASTO SVUOTA (LAYOUT OTTIMIZZATO) ---
+  _renderClearableEntitySelector({ selector, value, configValue, label, style }) {
+    const currentValue = value || "";
+    return html`
+      <div class="entity-row" style=${style || ""}>
+        <ha-selector
+          .hass=${this.hass}
+          .selector=${selector}
+          .value=${currentValue}
+          .configValue=${configValue}
+          .label=${label}
+          @value-changed=${this._valueChanged}
+        ></ha-selector>
+        <ha-icon-button
+          class="clear-btn"
+          title="Svuota"
+          .disabled=${!currentValue}
+          @click=${(ev) => {
+            ev.stopPropagation();
+            this._setConfigValue(configValue, "");
+          }}
+        >
+          <ha-icon icon="mdi:close"></ha-icon>
+        </ha-icon-button>
+      </div>
+    `;
+  }
+
+  _setConfigValue(configValue, newValue) {
+    if (!this._config || !this.hass) return;
+    if (!configValue) return;
+
+    if (this._config[configValue] === newValue) return;
+
+    const newConfig = { ...this._config };
+    if (newValue === "" || newValue === undefined || newValue === null) {
+      delete newConfig[configValue];
+    } else {
+      newConfig[configValue] = newValue;
+    }
+
+    this._config = newConfig;
+    this.dispatchEvent(new CustomEvent("config-changed", {
+      detail: { config: this._config },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   render() {
     if (!this.hass || !this._config) {
       return html``;
@@ -527,32 +573,28 @@ class DomHouseWeatherCardEditor extends LitElement {
     const renderSensorOptions = (label, suffix) => html`
       <div class="sensor-group">
           <h4>${label}</h4>
-          <ha-selector
-              .hass=${this.hass}
-              .selector=${{ entity: {} }}
-              .value=${this._config[`entity_${suffix}`]}
-              .configValue=${`entity_${suffix}`}
-              .label=${"Entità Principale"}
-              @value-changed=${this._valueChanged}
-          ></ha-selector>
 
-          <div class="sensor-options">
-              <ha-selector
-                  .hass=${this.hass}
-                  .selector=${{ icon: {} }}
-                  .value=${this._config[`icon_on_${suffix}`]}
-                  .configValue=${`icon_on_${suffix}`}
-                  .label=${"Icona (ON / Home)"}
-                  @value-changed=${this._valueChanged}
-              ></ha-selector>
-              <ha-selector
-                  .hass=${this.hass}
-                  .selector=${{ icon: {} }}
-                  .value=${this._config[`icon_off_${suffix}`]}
-                  .configValue=${`icon_off_${suffix}`}
-                  .label=${"Icona (OFF / Away)"}
-                  @value-changed=${this._valueChanged}
-              ></ha-selector>
+          ${this._renderClearableEntitySelector({
+              selector: { entity: {} },
+              value: this._config[`entity_${suffix}`],
+              configValue: `entity_${suffix}`,
+              label: "Entità Principale"
+          })}
+
+          <div class="sensor-options icon-options-grid">
+              ${this._renderClearableEntitySelector({
+                  selector: { icon: {} },
+                  value: this._config[`icon_on_${suffix}`],
+                  configValue: `icon_on_${suffix}`,
+                  label: "Icona (ON)"
+              })}
+
+              ${this._renderClearableEntitySelector({
+                  selector: { icon: {} },
+                  value: this._config[`icon_off_${suffix}`],
+                  configValue: `icon_off_${suffix}`,
+                  label: "Icona (OFF)"
+              })}
           </div>
 
            <div class="sensor-options">
@@ -615,34 +657,28 @@ class DomHouseWeatherCardEditor extends LitElement {
           <div class="badge-section" style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px;">
               <span style="font-size: 0.85em; font-weight: bold; opacity: 0.8;">Bollino / Badge (Opzionale)</span>
 
-              <ha-selector
-                  .hass=${this.hass}
-                  .selector=${{ entity: {} }}
-                  .value=${this._config[`badge_entity_${suffix}`]}
-                  .configValue=${`badge_entity_${suffix}`}
-                  .label=${"Entità Badge"}
-                  @value-changed=${this._valueChanged}
-                  style="margin-top: 5px;"
-              ></ha-selector>
+              ${this._renderClearableEntitySelector({
+                  selector: { entity: {} },
+                  value: this._config[`badge_entity_${suffix}`],
+                  configValue: `badge_entity_${suffix}`,
+                  label: "Entità Badge",
+                  style: "margin-top: 5px;"
+              })}
 
-              <div class="sensor-options">
-                  <ha-selector
-                      .hass=${this.hass}
-                      .selector=${{ icon: {} }}
-                      .value=${this._config[`badge_icon_on_${suffix}`]}
-                      .configValue=${`badge_icon_on_${suffix}`}
-                      .label=${"Icona ON"}
-                      @value-changed=${this._valueChanged}
-                  ></ha-selector>
+              <div class="sensor-options icon-options-grid">
+                  ${this._renderClearableEntitySelector({
+                      selector: { icon: {} },
+                      value: this._config[`badge_icon_on_${suffix}`],
+                      configValue: `badge_icon_on_${suffix}`,
+                      label: "Icona ON"
+                  })}
 
-                  <ha-selector
-                      .hass=${this.hass}
-                      .selector=${{ icon: {} }}
-                      .value=${this._config[`badge_icon_off_${suffix}`]}
-                      .configValue=${`badge_icon_off_${suffix}`}
-                      .label=${"Icona OFF"}
-                      @value-changed=${this._valueChanged}
-                  ></ha-selector>
+                  ${this._renderClearableEntitySelector({
+                      selector: { icon: {} },
+                      value: this._config[`badge_icon_off_${suffix}`],
+                      configValue: `badge_icon_off_${suffix}`,
+                      label: "Icona OFF"
+                  })}
               </div>
 
               <div class="sensor-options">
@@ -691,14 +727,13 @@ class DomHouseWeatherCardEditor extends LitElement {
         ></ha-selector>
 
         <h3>Entità Meteo</h3>
-        <ha-selector
-            .hass=${this.hass}
-            .selector=${{ entity: { domain: "weather" } }}
-            .value=${this._config.entity_weather}
-            .configValue=${"entity_weather"}
-            .label=${"Scegli entità meteo"}
-            @value-changed=${this._valueChanged}
-        ></ha-selector>
+
+        ${this._renderClearableEntitySelector({
+            selector: { entity: { domain: "weather" } },
+            value: this._config.entity_weather,
+            configValue: "entity_weather",
+            label: "Scegli entità meteo"
+        })}
 
         <h3>Cerchi (Configurazione)</h3>
         ${renderSensorOptions("Cerchio 1 (Sinistra)", "circle_1")}
@@ -719,24 +754,8 @@ class DomHouseWeatherCardEditor extends LitElement {
 
     if (!configValue) return;
 
-    // Aggiunto il supporto universale per ha-selector
     let newValue = ev.detail && ev.detail.value !== undefined ? ev.detail.value : target.value;
-
-    if (this._config[configValue] === newValue) return;
-
-    const newConfig = { ...this._config };
-    if (newValue === "" || newValue === undefined || newValue === null) {
-      delete newConfig[configValue];
-    } else {
-      newConfig[configValue] = newValue;
-    }
-
-    this._config = newConfig;
-    this.dispatchEvent(new CustomEvent("config-changed", {
-      detail: { config: this._config },
-      bubbles: true,
-      composed: true,
-    }));
+    this._setConfigValue(configValue, newValue);
   }
 
   static get styles() {
@@ -750,9 +769,50 @@ class DomHouseWeatherCardEditor extends LitElement {
         background: var(--secondary-background-color);
       }
       .sensor-group h4 { margin: 0 0 10px 0; opacity: 0.8; }
-      .sensor-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; }
+
+      .sensor-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+
+      /* Layout dinamico per le icone con X per evitare l'uscita dal box */
+      .icon-options-grid {
+         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+
       h3 { margin-bottom: 10px; margin-top: 20px; }
-      ha-selector { width: 100%; display: block; }
+      ha-selector { width: 100%; display: block; min-width: 0; }
+
+      /* CSS AGGIORNATO PER PREVENIRE L'OVERFLOW */
+      .entity-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px;
+        align-items: center;
+        min-width: 0; /* Regola fondamentale anti-overflow */
+      }
+
+      .clear-btn {
+        color: var(--secondary-text-color, #888);
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        z-index: 2;
+        --mdc-icon-button-size: 32px;
+        --mdc-icon-size: 20px;
+        --mdc-icon-button-ink-color: var(--secondary-text-color);
+        --mdc-icon-button-disabled-ink-color: var(--disabled-text-color);
+      }
+      .clear-btn:hover {
+        color: var(--primary-text-color, #fff);
+        --mdc-icon-button-ink-color: var(--primary-text-color);
+      }
+      .clear-btn ha-icon {
+        color: inherit;
+        opacity: 1;
+      }
     `;
   }
 }
